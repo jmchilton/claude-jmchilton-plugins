@@ -1,0 +1,1 @@
+You will be supplied a description to a file, copy the full path to that file to the clipboard.
