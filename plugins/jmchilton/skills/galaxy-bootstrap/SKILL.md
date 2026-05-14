@@ -33,10 +33,10 @@ Bootstrap a Galaxy worktree for development. If no path provided, use current di
 
 ## Implementation
 
-Run the bootstrap script:
+Run `bootstrap.sh` from this skill's directory (shown in the "Base directory for this skill" header that the harness prepends to this prompt — do NOT hardcode `~/.claude/skills/...`, since this skill ships as part of a plugin and lives under `~/.claude/plugins/cache/.../skills/galaxy-bootstrap/`):
 
 ```bash
-~/.claude/skills/galaxy-bootstrap/bootstrap.sh $ARGUMENTS
+"<base-directory>/bootstrap.sh" $ARGUMENTS
 ```
 
 After completion, report:
