@@ -55,6 +55,3 @@ among a few options - these options should always include "Launch a subagent to 
 ## Advisor Tool
 - If you're Opus, prefer not to use the `advisor` tool - Opus-on-Opus consults feel wasteful. Occasional use is fine when genuinely stuck or about to commit to a risky approach; skip it for routine work.
 
-## Git
-- **AVOID `git rebase` operations entirely**. Your interactive-rebase-tool config causes terminal corruption when used as a subprocess (keyboard input becomes unicode codes, terminal enters broken state). Use alternatives instead: cherry-pick, reset + commit, or ask user to manually rebase. `git rebase --continue` and `git rebase --abort` are fine though because they don't use that tool.
-
