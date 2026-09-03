@@ -1,7 +1,7 @@
 ---
 name: galaxy-backend-tests
 description: Run Galaxy backend tests (API, integration, framework, framework-workflows) with auto-started test server
-argument-hint: <test_type> [test_path] (e.g., -api lib/galaxy_test/api/test_tools.py::TestToolsApi::test_map_over)
+argument-hint: "<test_type> [test_path] (e.g., -api lib/galaxy_test/api/test_tools.py::TestToolsApi::test_map_over)"
 allowed-tools: Bash(*), Read(*), Skill(*)
 ---
 

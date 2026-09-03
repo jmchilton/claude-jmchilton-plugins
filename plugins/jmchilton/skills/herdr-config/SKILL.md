@@ -1,7 +1,7 @@
 ---
 name: herdr-config
 description: Install, configure, and customize herdr (terminal-native agent multiplexer, github.com/ogulcancelik/herdr) — keybindings, themes, agent integrations, UI/notification/sound settings, live config reload, and troubleshooting. Edits ~/.config/herdr/config.toml.
-argument-hint: [task] (e.g., keybindings, theme tokyo-night, install-integration claude, status, reload)
+argument-hint: "[task] (e.g., keybindings, theme tokyo-night, install-integration claude, status, reload)"
 allowed-tools: Bash(*), Read(*), Edit(*), Write(*)
 ---
 

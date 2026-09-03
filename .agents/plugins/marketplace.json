@@ -1,0 +1,20 @@
+{
+  "name": "claude-jmchilton-plugins",
+  "interface": {
+    "displayName": "John Chilton's Plugins"
+  },
+  "plugins": [
+    {
+      "name": "jmchilton",
+      "source": {
+        "source": "local",
+        "path": "./plugins/jmchilton"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

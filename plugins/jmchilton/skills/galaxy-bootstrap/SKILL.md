@@ -1,12 +1,13 @@
 ---
 name: galaxy-bootstrap
-description: Bootstrap a Galaxy worktree with Python deps, client deps, Playwright, and config
-disable-model-invocation: true
-argument-hint: [galaxy-root-path]
+description: Bootstrap a Galaxy worktree with Python deps, client deps, Playwright, and config. Use only when the user explicitly asks to bootstrap or initialize a Galaxy worktree.
+argument-hint: "[galaxy-root-path]"
 allowed-tools: Bash(*), Read(*)
 ---
 
-Bootstrap a Galaxy worktree for development. If no path provided, use current directory.
+Bootstrap a Galaxy worktree for development. Run this workflow only after the
+user explicitly asks to bootstrap or initialize a worktree. If no path is
+provided, use the current directory.
 
 ## Usage
 

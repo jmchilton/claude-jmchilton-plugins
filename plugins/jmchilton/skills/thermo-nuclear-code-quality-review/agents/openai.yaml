@@ -1,0 +1,6 @@
+interface:
+  display_name: "Thermo-Nuclear Code Quality Review"
+  short_description: "Run an unusually strict maintainability review"
+  default_prompt: "Perform a thermo-nuclear code quality review of this branch."
+policy:
+  allow_implicit_invocation: false

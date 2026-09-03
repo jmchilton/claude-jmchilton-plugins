@@ -1,6 +1,19 @@
 {
   "name": "jmchilton",
-  "description": "Adds jmchilton skills and commands",
-  "version": "1.0.0"
+  "description": "Personal Galaxy development, testing, and environment workflows.",
+  "version": "1.0.0",
+  "author": {
+    "name": "John Chilton",
+    "email": "jmchilton@gmail.com",
+    "url": "https://github.com/jmchilton"
+  },
+  "homepage": "https://github.com/jmchilton/claude-jmchilton-plugins",
+  "repository": "https://github.com/jmchilton/claude-jmchilton-plugins",
+  "license": "MIT",
+  "keywords": [
+    "galaxy",
+    "development",
+    "testing",
+    "automation"
+  ]
 }
-

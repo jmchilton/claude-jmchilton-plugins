@@ -1,0 +1,39 @@
+{
+  "name": "jmchilton",
+  "version": "1.0.0",
+  "description": "Personal Galaxy development, testing, and environment workflows.",
+  "author": {
+    "name": "John Chilton",
+    "email": "jmchilton@gmail.com",
+    "url": "https://github.com/jmchilton"
+  },
+  "homepage": "https://github.com/jmchilton/claude-jmchilton-plugins",
+  "repository": "https://github.com/jmchilton/claude-jmchilton-plugins",
+  "license": "MIT",
+  "keywords": [
+    "galaxy",
+    "development",
+    "testing",
+    "automation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "John Chilton's Developer Workflows",
+    "shortDescription": "Galaxy development and testing workflows",
+    "longDescription": "Reusable workflows for bootstrapping Galaxy worktrees and running Galaxy backend, browser, and Tool Shed tests.",
+    "developerName": "John Chilton",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Execute"
+    ],
+    "websiteURL": "https://github.com/jmchilton/claude-jmchilton-plugins",
+    "defaultPrompt": [
+      "Bootstrap this Galaxy worktree for development.",
+      "Run the relevant Galaxy backend test.",
+      "Run this Galaxy browser test."
+    ],
+    "brandColor": "#5B4B8A"
+  }
+}

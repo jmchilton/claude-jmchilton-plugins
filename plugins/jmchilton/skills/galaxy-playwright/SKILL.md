@@ -1,7 +1,7 @@
 ---
 name: galaxy-playwright
 description: Run Galaxy Playwright/Selenium E2E tests against a running Galaxy server
-argument-hint: [test_path] (e.g., test_login.py::TestLogin::test_login)
+argument-hint: "[test_path] (e.g., test_login.py::TestLogin::test_login)"
 allowed-tools: Bash(*), Read(*), Skill(*)
 ---
 

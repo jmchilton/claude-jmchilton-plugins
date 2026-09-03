@@ -1,7 +1,7 @@
 ---
 name: galaxy-toolshed-tests
 description: Run Galaxy Tool Shed functional tests (API and browser-based) with auto-started test servers
-argument-hint: [test_path] (e.g., lib/tool_shed/test/functional/test_shed_repositories.py or lib/tool_shed/test/functional/test_0430_browse_utilities.py)
+argument-hint: "[test_path] (e.g., lib/tool_shed/test/functional/test_shed_repositories.py or lib/tool_shed/test/functional/test_0430_browse_utilities.py)"
 allowed-tools: Bash(*), Read(*), Skill(*)
 ---
 
