@@ -19,7 +19,7 @@ host-specific behavior remains explicit.
 | `.claude-plugin/` manifests | Yes | No | Claude marketplace and plugin metadata. |
 | `.codex-plugin/` manifest | No | Yes | Codex plugin metadata. |
 
-The six skills are the cross-host core. The command collection remains useful
+The seven skills are the cross-host core. The command collection remains useful
 in Claude Code, but a command is not claimed as Codex-compatible until its
 workflow has been converted into a provider-neutral skill.
 
@@ -64,6 +64,7 @@ keeps development testing separate from the published GitHub source.
 
 | Skill | Purpose |
 | --- | --- |
+| `codex-review` | Run an independent review in a fresh, read-only Codex CLI session and triage the findings. |
 | `galaxy-backend-tests` | Run Galaxy API, integration, framework, workflow-framework, and CWL backend tests. |
 | `galaxy-bootstrap` | Prepare a Galaxy worktree with Python, client, browser, and local configuration dependencies; explicit invocation only in Codex. |
 | `galaxy-playwright` | Run Galaxy Playwright or Selenium end-to-end tests against a development server. |
@@ -128,6 +129,31 @@ claude plugin validate plugins/jmchilton
 Some legacy commands currently produce warnings because they predate command
 frontmatter. They remain tracked portability work rather than being silently
 presented as fully normalized components.
+
+Run the repository release checks as well:
+
+```sh
+python3 scripts/validate_plugin_release.py
+```
+
+Every change under `plugins/jmchilton/` must be released with a new semantic
+version. The Claude and Codex manifests carry the same clean release version;
+Codex cachebuster suffixes are only for local development and are never
+committed. See [AGENTS.md](AGENTS.md) for the complete maintenance and release
+policy, and [CHANGELOG.md](CHANGELOG.md) for published changes.
+
+## Updating an installed plugin
+
+Published Claude Code installs update without uninstalling:
+
+```sh
+claude plugin marketplace update claude-jmchilton-plugins
+claude plugin update jmchilton@claude-jmchilton-plugins
+```
+
+Then run `/reload-plugins` or start a new Claude Code session. If an update says
+the installed version is already current, verify that the release manifest was
+bumped; reinstalling is a recovery step, not the normal update workflow.
 
 ## License
 

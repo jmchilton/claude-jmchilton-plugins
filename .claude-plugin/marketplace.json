@@ -5,14 +5,13 @@
     "email": "jmchilton@gmail.com"
   },
   "metadata": {
-    "description": "John Chilton's personal agent workflows for Claude Code and Codex",
-    "version": "0.1.0"
+    "description": "John Chilton's personal agent workflows for Claude Code and Codex"
   },
   "plugins": [
     {
       "name": "jmchilton",
       "source": "./plugins/jmchilton",
-      "description": "Galaxy development, testing, and environment workflows"
+      "description": "Code review, Galaxy development, testing, and environment workflows"
     }
   ]
 }

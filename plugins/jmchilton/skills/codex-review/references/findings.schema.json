@@ -1,0 +1,56 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["findings", "coverage"],
+  "properties": {
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["files_reviewed", "notes"],
+      "properties": {
+        "files_reviewed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Repo-relative paths actually read."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Anything in scope that was NOT reviewed, and why. Empty string if full coverage."
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "description": "Empty array if nothing was found. Do not invent findings to fill space.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["severity", "category", "file", "line", "title", "detail", "failure_scenario", "confidence"],
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": ["P0", "P1", "P2", "P3"],
+            "description": "P0 data loss/security/crash on a normal path; P1 wrong behavior on a reachable path; P2 wrong behavior on an edge case; P3 maintainability."
+          },
+          "category": {
+            "type": "string",
+            "description": "Short kebab-case slug, e.g. correctness, security, concurrency, api-contract, test-coverage, reuse, migration."
+          },
+          "file": { "type": "string", "description": "Repo-relative path." },
+          "line": { "type": "integer", "description": "1-indexed anchor line. Use 0 for a finding with no single line." },
+          "title": { "type": "string", "description": "One line, the claim itself." },
+          "detail": { "type": "string", "description": "Why it is wrong, citing the code." },
+          "failure_scenario": {
+            "type": "string",
+            "description": "Concrete inputs or state, then the wrong output or crash. If you cannot write one, the finding is speculative - say so here."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["certain", "likely", "speculative"],
+            "description": "Be honest. Speculative findings are welcome but must be labelled."
+          }
+        }
+      }
+    }
+  }
+}
