@@ -3,6 +3,13 @@
 All notable changes to the `jmchilton` plugin are documented here. Versions
 follow Semantic Versioning.
 
+## [1.2.1] - 2026-09-04
+
+### Fixed
+
+- Made `codex-review` Claude-only by moving it out of Codex's shared skill
+  discovery path while retaining it through Claude's custom skill path.
+
 ## [1.2.0] - 2026-09-03
 
 ### Added

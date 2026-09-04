@@ -14,6 +14,8 @@ maintained source.
 ## Repository contract
 
 - `plugins/jmchilton/skills/` is the shared Claude Code and Codex skill surface.
+- `plugins/jmchilton/claude-skills/` contains skills intentionally exposed only
+  to Claude Code; the Claude manifest adds this path while Codex must not.
 - `plugins/jmchilton/commands/` is Claude Code-only until a command is converted
   into a provider-neutral skill.
 - `.claude-plugin/marketplace.json` publishes the Claude Code marketplace.
@@ -32,14 +34,17 @@ current task, and never hide user work with destructive Git commands.
 1. Choose the maintained home first. General personal workflows belong here;
    Galaxy-specific workflows normally belong in
    `~/projects/repositories/galaxy-skills`.
-2. Copy the complete skill directory, including referenced scripts, examples,
+2. Choose `skills/` for shared workflows and `claude-skills/` only when the
+   workflow is intentionally Claude-only. Do not use runtime guards to imitate
+   packaging-level host exclusion.
+3. Copy the complete skill directory, including referenced scripts, examples,
    and assets. Do not leave a canonical skill stranded only in a home directory.
-3. Keep shared skills provider-neutral unless the workflow genuinely targets a
+4. Keep shared skills provider-neutral unless the workflow genuinely targets a
    particular host. Describe both when the skill should and should not trigger.
-4. Update the README inventory and any maintenance inventory that tracks the
+5. Update the README inventory and any maintenance inventory that tracks the
    skill.
-5. Validate the skill and both plugin packaging surfaces.
-6. Replace intentional home-directory development copies with symlinks to the
+6. Validate the skill and both plugin packaging surfaces.
+7. Replace intentional home-directory development copies with symlinks to the
    canonical checkout when that is more useful than a packaged install.
 
 ## Version and cache policy
@@ -84,7 +89,7 @@ Validate every added or changed skill with Codex's skill validator:
 
 ```sh
 python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
-  plugins/jmchilton/skills/<skill-name>
+  plugins/jmchilton/<skills-or-claude-skills>/<skill-name>
 ```
 
 Legacy Claude commands can emit known frontmatter warnings. Record and improve

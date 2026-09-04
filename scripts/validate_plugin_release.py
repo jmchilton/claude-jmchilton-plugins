@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CLAUDE_MANIFEST = Path("plugins/jmchilton/.claude-plugin/plugin.json")
 CODEX_MANIFEST = Path("plugins/jmchilton/.codex-plugin/plugin.json")
 PLUGIN_ROOT = Path("plugins/jmchilton")
+SHARED_SKILLS_ROOT = PLUGIN_ROOT / "skills"
+CLAUDE_ONLY_SKILLS_ROOT = PLUGIN_ROOT / "claude-skills"
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$")
 
 
@@ -82,6 +84,13 @@ def validate_skill(skill_dir: Path) -> None:
             fail(f"SKILL.md lacks {field}: {skill_file.relative_to(ROOT)}")
 
 
+def skill_dirs(relative_root: Path) -> list[Path]:
+    root = ROOT / relative_root
+    if not root.is_dir():
+        fail(f"skill root does not exist: {relative_root}")
+    return sorted(path for path in root.iterdir() if path.is_dir())
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -104,6 +113,14 @@ def main() -> None:
     if codex.get("version") != version:
         fail("Claude and Codex manifest versions must match exactly in committed releases")
 
+    claude_skill_paths = claude.get("skills")
+    if isinstance(claude_skill_paths, str):
+        claude_skill_paths = [claude_skill_paths]
+    if not isinstance(claude_skill_paths, list) or "./claude-skills/" not in claude_skill_paths:
+        fail("Claude manifest must include the ./claude-skills/ custom skill path")
+    if codex.get("skills") != "./skills/":
+        fail("Codex manifest must expose only the shared ./skills/ path")
+
     changelog = (ROOT / "CHANGELOG.md").read_text()
     if f"## [{version}]" not in changelog:
         fail(f"CHANGELOG.md lacks a heading for {version}")
@@ -121,11 +138,20 @@ def main() -> None:
         if "version" in matches[0]:
             fail(f"{marketplace_name} marketplace entry must not declare a plugin version")
 
-    skills_root = ROOT / PLUGIN_ROOT / "skills"
-    skill_dirs = sorted(path for path in skills_root.iterdir() if path.is_dir())
-    if not skill_dirs:
+    shared_skill_dirs = skill_dirs(SHARED_SKILLS_ROOT)
+    claude_only_skill_dirs = skill_dirs(CLAUDE_ONLY_SKILLS_ROOT)
+    if not shared_skill_dirs:
         fail("plugin contains no skills")
-    for skill_dir in skill_dirs:
+    if (ROOT / SHARED_SKILLS_ROOT / "codex-review").exists():
+        fail("codex-review must not be present in the shared Codex skill path")
+    if not (ROOT / CLAUDE_ONLY_SKILLS_ROOT / "codex-review").is_dir():
+        fail("codex-review must be present in the Claude-only skill path")
+    shared_names = {path.name for path in shared_skill_dirs}
+    claude_only_names = {path.name for path in claude_only_skill_dirs}
+    overlap = shared_names & claude_only_names
+    if overlap:
+        fail(f"skill names appear in both shared and Claude-only paths: {sorted(overlap)}")
+    for skill_dir in shared_skill_dirs + claude_only_skill_dirs:
         validate_skill(skill_dir)
 
     if args.base_ref and set(args.base_ref) != {"0"}:
@@ -141,7 +167,12 @@ def main() -> None:
                     f"plugin files changed relative to {args.base_ref}, but version remains {version}"
                 )
 
-    print(f"validated jmchilton plugin release {version} ({len(skill_dirs)} skills)")
+    claude_only_label = "skill" if len(claude_only_skill_dirs) == 1 else "skills"
+    print(
+        f"validated jmchilton plugin release {version} "
+        f"({len(shared_skill_dirs)} shared skills, "
+        f"{len(claude_only_skill_dirs)} Claude-only {claude_only_label})"
+    )
 
 
 if __name__ == "__main__":

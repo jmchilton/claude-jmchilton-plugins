@@ -1,7 +1,7 @@
 {
   "name": "jmchilton",
   "description": "Personal code review, Galaxy development, testing, and environment workflows.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "John Chilton",
     "email": "jmchilton@gmail.com",
@@ -18,5 +18,6 @@
     "development",
     "testing",
     "automation"
-  ]
+  ],
+  "skills": "./claude-skills/"
 }

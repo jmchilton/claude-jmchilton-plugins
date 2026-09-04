@@ -1,6 +1,6 @@
 {
   "name": "jmchilton",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Personal code review, Galaxy development, testing, and environment workflows.",
   "author": {
     "name": "John Chilton",
@@ -23,7 +23,7 @@
   "interface": {
     "displayName": "John Chilton's Developer Workflows",
     "shortDescription": "Code review and Galaxy development workflows",
-    "longDescription": "Reusable workflows for independent code review, Herdr worktree orchestration, bootstrapping Galaxy worktrees, and running Galaxy backend, browser, and Tool Shed tests.",
+    "longDescription": "Reusable workflows for code review, Herdr worktree orchestration, bootstrapping Galaxy worktrees, and running Galaxy backend, browser, and Tool Shed tests.",
     "developerName": "John Chilton",
     "category": "Developer Tools",
     "capabilities": [
@@ -34,10 +34,8 @@
     "websiteURL": "https://github.com/jmchilton/claude-jmchilton-plugins",
     "defaultPrompt": [
       "Bootstrap this Galaxy worktree for development.",
-      "Get an independent Codex review of this branch.",
       "Open this existing worktree as a Herdr workspace.",
-      "Run the relevant Galaxy backend test.",
-      "Run this Galaxy browser test."
+      "Run the relevant Galaxy backend test."
     ],
     "brandColor": "#5B4B8A"
   }

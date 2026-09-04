@@ -14,14 +14,16 @@ host-specific behavior remains explicit.
 | Component | Claude Code | Codex | Notes |
 | --- | --- | --- | --- |
 | `plugins/jmchilton/skills/` | Yes | Yes | Shared `SKILL.md` workflows. |
+| `plugins/jmchilton/claude-skills/` | Yes | No | Skills intentionally exposed only to Claude Code. |
 | `plugins/jmchilton/commands/` | Yes | No | Claude Code commands awaiting portability review. |
 | `USER_CLAUDE.md` | Manual | No | Personal Claude instructions; not installed by the plugin. |
 | `.claude-plugin/` manifests | Yes | No | Claude marketplace and plugin metadata. |
 | `.codex-plugin/` manifest | No | Yes | Codex plugin metadata. |
 
-The eight skills are the cross-host core. The command collection remains useful
-in Claude Code, but a command is not claimed as Codex-compatible until its
-workflow has been converted into a provider-neutral skill.
+Seven skills form the cross-host core. `codex-review` is intentionally
+Claude-only because it launches a fresh Codex session to provide Claude with an
+independent review. The command collection remains Claude-only until individual
+workflows are converted into provider-neutral skills.
 
 ## Install
 
@@ -64,7 +66,6 @@ keeps development testing separate from the published GitHub source.
 
 | Skill | Purpose |
 | --- | --- |
-| `codex-review` | Run an independent review in a fresh, read-only Codex CLI session and triage the findings. |
 | `galaxy-backend-tests` | Run Galaxy API, integration, framework, workflow-framework, and CWL backend tests. |
 | `galaxy-bootstrap` | Prepare a Galaxy worktree with Python, client, browser, and local configuration dependencies; explicit invocation only in Codex. |
 | `galaxy-playwright` | Run Galaxy Playwright or Selenium end-to-end tests against a development server. |
@@ -73,8 +74,15 @@ keeps development testing separate from the published GitHub source.
 | `herdr-open-worktree` | Open an existing Git worktree as a Herdr workspace and optionally continue there with Claude or Codex. |
 | `thermo-nuclear-code-quality-review` | Run an explicitly requested, unusually strict maintainability review. |
 
-Skills may be selected automatically from their descriptions. In Codex, use
-`/skills` or mention a skill as `$skill-name` when explicit selection is useful.
+## Claude-only skills
+
+| Skill | Purpose |
+| --- | --- |
+| `codex-review` | Ask a fresh, read-only Codex CLI session for an independent review, then verify its findings before reporting them to the Claude user. |
+
+Shared skills may be selected automatically from their descriptions. In Codex,
+use `/skills` or mention a shared skill as `$skill-name` when explicit selection
+is useful. Claude Code exposes both the shared and Claude-only sections.
 
 ## Claude Code commands
 
@@ -102,6 +110,7 @@ Code.
 ├── plugins/jmchilton/
 │   ├── .claude-plugin/plugin.json         # Claude Code manifest
 │   ├── .codex-plugin/plugin.json          # Codex manifest
+│   ├── claude-skills/                     # Claude-only skills
 │   ├── commands/                          # Claude-only commands
 │   └── skills/                            # Shared agent skills
 └── USER_CLAUDE.md                         # Optional personal instructions
@@ -109,7 +118,7 @@ Code.
 
 ## Maintenance
 
-When adding or changing a shared skill:
+When adding or changing a shared or host-specific skill:
 
 1. Keep the workflow provider-neutral unless the task genuinely targets one
    host.
