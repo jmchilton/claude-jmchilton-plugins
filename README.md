@@ -19,7 +19,7 @@ host-specific behavior remains explicit.
 | `.claude-plugin/` manifests | Yes | No | Claude marketplace and plugin metadata. |
 | `.codex-plugin/` manifest | No | Yes | Codex plugin metadata. |
 
-The seven skills are the cross-host core. The command collection remains useful
+The eight skills are the cross-host core. The command collection remains useful
 in Claude Code, but a command is not claimed as Codex-compatible until its
 workflow has been converted into a provider-neutral skill.
 
@@ -70,6 +70,7 @@ keeps development testing separate from the published GitHub source.
 | `galaxy-playwright` | Run Galaxy Playwright or Selenium end-to-end tests against a development server. |
 | `galaxy-toolshed-tests` | Run Tool Shed API and browser functional tests with their supporting servers. |
 | `herdr-config` | Install, inspect, and customize the herdr terminal agent multiplexer. |
+| `herdr-open-worktree` | Open an existing Git worktree as a Herdr workspace and optionally continue there with Claude or Codex. |
 | `thermo-nuclear-code-quality-review` | Run an explicitly requested, unusually strict maintainability review. |
 
 Skills may be selected automatically from their descriptions. In Codex, use

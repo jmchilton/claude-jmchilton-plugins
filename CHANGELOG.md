@@ -3,6 +3,14 @@
 All notable changes to the `jmchilton` plugin are documented here. Versions
 follow Semantic Versioning.
 
+## [1.2.0] - 2026-09-03
+
+### Added
+
+- Added `herdr-open-worktree`, a shared Claude Code and Codex workflow for
+  opening an existing Git worktree as a native Herdr workspace and optionally
+  starting an agent in that checkout.
+
 ## [1.1.0] - 2026-09-03
 
 ### Added
