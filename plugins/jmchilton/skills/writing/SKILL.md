@@ -1,6 +1,6 @@
 ---
 name: writing
-description: Draft or revise general prose such as reports, explanations, and announcements. Provides the shared prose rules used by the paper-documentation and code-documentation skills.
+description: Draft or revise general prose such as reports, explanations, and announcements. Provides the shared prose rules used by the paper-documentation and software-documentation skills.
 ---
 
 # Writing

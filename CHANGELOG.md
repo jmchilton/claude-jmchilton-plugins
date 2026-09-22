@@ -7,7 +7,7 @@ follow Semantic Versioning.
 
 ### Added
 
-- Added small, shared writing, paper documentation, and code documentation skills.
+- Added small, shared writing, paper documentation, and software documentation skills.
 
 ## [1.2.1] - 2026-09-04
 

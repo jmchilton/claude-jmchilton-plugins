@@ -1,13 +1,13 @@
 ---
-name: code-documentation
-description: Write or update documentation for software, including READMEs, setup guides, API descriptions, examples, and migration notes. Use when accuracy depends on the current code and its behavior.
+name: software-documentation
+description: Write or update standalone software documentation such as help manuals, READMEs, user guides, tutorials, API reference pages, and migration guides. Do not use for docstrings or code comments.
 ---
 
-# Code documentation
+# Software documentation
 
 Read and apply the shared rules in [Writing](../writing/SKILL.md) first. This skill adds software documentation requirements.
 
-Inspect the relevant code, configuration, tests, and existing docs before describing behavior. Identify the intended reader and the task they need to complete.
+Produce reader-facing pages outside the source code. Inspect relevant code, configuration, tests, and existing docs to verify behavior. Identify the intended reader and the task they need to complete.
 
 ## Draft and verify
 
