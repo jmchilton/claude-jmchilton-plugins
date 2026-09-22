@@ -15,6 +15,17 @@ Write for the stated reader and purpose. Infer either from the request and exist
 - Keep a metaphor only when it explains something the literal sentence cannot. If the passage already has concrete evidence such as named tools, sample sizes, measured runtimes, or statistical results, a metaphor that merely repeats the point is decoration. Keep the evidence and cut the flourish. This evidence-plus-flourish pattern often reads like generated prose.
 - In original prose, avoid `ships` and `ships today`, `substrate` as technology jargon, `uses rather than owns`, and `gate` for a human decision. Name the actual behavior, infrastructure, ownership arrangement, or approval step instead. Literal, technical, and quoted uses can remain.
 
+## Forbidden prose patterns
+
+Treat these as bans in original prose. Preserve quotations, published titles, and technical terms used with a precise meaning. Check each match in context rather than rewriting mechanically.
+
+- Transition padding: `crucially`, `arguably`, `remarkably`, `inherently`.
+- Puffery: `pivotal`, `paramount`, `multifaceted`, `intricate`, `indispensable`, `seamless`, `revolutionary`, `game-changing`, `ground-breaking`, `groundbreaking`, `unprecedented`.
+- Metaphorical clichés: `tapestry`, `testament`, `beacon`, `foster`, `harness`, `delve`, `watershed`, `linchpin`, `double-edged sword`.
+- Decorative verbs and phrases: `underscore`, `shed light on`, `pave the way for`, `illuminate`.
+- Boilerplate: `black box`, `gold-standard`, `copious`, `demystify`, `it is important to note`, `it is important to remember`, `it is worth noting`, `it is worth mentioning`.
+- Formulaic openings and closings: `X is fundamental to`, `X plays a vital role in`, `Ultimately, X bridges`, and `paving the way for future advances`.
+
 ## Draft and revise
 
 - Start with the point the reader needs. In an overview, explain the outcome before naming implementation details.
