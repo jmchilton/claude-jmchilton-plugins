@@ -77,6 +77,8 @@ keeps development testing separate from the published GitHub source.
 | `herdr-open-worktree` | Open an existing Git worktree as a Herdr workspace and optionally continue there with Claude or Codex. |
 | `thermo-nuclear-code-quality-review` | Run an explicitly requested, unusually strict maintainability review. |
 
+`paper-documentation` and `code-documentation` load `writing` for shared prose rules, then add their own domain checks.
+
 ## Claude-only skills
 
 | Skill | Purpose |

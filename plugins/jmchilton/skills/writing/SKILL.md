@@ -1,6 +1,6 @@
 ---
 name: writing
-description: Draft or revise general prose such as reports, explanations, and announcements. Use for writing tasks that do not need the paper-documentation or code-documentation workflow.
+description: Draft or revise general prose such as reports, explanations, and announcements. Provides the shared prose rules used by the paper-documentation and code-documentation skills.
 ---
 
 # Writing
@@ -20,6 +20,7 @@ Write for the stated reader and purpose. Infer either from the request and exist
 - Start with the point the reader needs. In an overview, explain the outcome before naming implementation details.
 - Give each paragraph a job: make a claim, show the evidence or mechanism, then explain its consequence. Carry a concrete subject into the next paragraph so the argument progresses.
 - Define unfamiliar terms by what they do at first use. Break up clusters of acronyms and abstract nouns with a concrete action or example.
+- Name the actor and action. Use precise verbs that describe what the study, software, or person actually did. Cut empty hedges such as `we attempt to explore`, `it might suggest`, and `could potentially indicate`. State real uncertainty through evidence, scope, or a specific limitation. Decisive wording must never strengthen a claim beyond its support.
 - Preserve the author's intended meaning and voice. Treat examples of another person's writing as references to analyze, not a voice to impersonate.
 - Check names, dates, numbers, quotations, and links against available sources. Give metrics a referent and time window. Mark unresolved facts instead of inventing them.
 - Replace importance claims, promotional adjectives, and decorative metaphors with the actual result or mechanism. Cut stock openings, repeated conclusions, and endings that merely say the work matters.
