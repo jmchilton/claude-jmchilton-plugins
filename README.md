@@ -20,7 +20,7 @@ host-specific behavior remains explicit.
 | `.claude-plugin/` manifests | Yes | No | Claude marketplace and plugin metadata. |
 | `.codex-plugin/` manifest | No | Yes | Codex plugin metadata. |
 
-Seven skills form the cross-host core. `codex-review` is intentionally
+Ten skills form the cross-host core. `codex-review` is intentionally
 Claude-only because it launches a fresh Codex session to provide Claude with an
 independent review. The command collection remains Claude-only until individual
 workflows are converted into provider-neutral skills.
@@ -66,6 +66,9 @@ keeps development testing separate from the published GitHub source.
 
 | Skill | Purpose |
 | --- | --- |
+| `writing` | Draft and revise general prose with clear claims and source checks. |
+| `paper-documentation` | Document scientific papers with evidence and citation checks. |
+| `software-documentation` | Write help manuals, READMEs, guides, and API reference pages grounded in current software behavior. |
 | `galaxy-backend-tests` | Run Galaxy API, integration, framework, workflow-framework, and CWL backend tests. |
 | `galaxy-bootstrap` | Prepare a Galaxy worktree with Python, client, browser, and local configuration dependencies; explicit invocation only in Codex. |
 | `galaxy-playwright` | Run Galaxy Playwright or Selenium end-to-end tests against a development server. |
@@ -73,6 +76,8 @@ keeps development testing separate from the published GitHub source.
 | `herdr-config` | Install, inspect, and customize the herdr terminal agent multiplexer. |
 | `herdr-open-worktree` | Open an existing Git worktree as a Herdr workspace and optionally continue there with Claude or Codex. |
 | `thermo-nuclear-code-quality-review` | Run an explicitly requested, unusually strict maintainability review. |
+
+`paper-documentation` and `software-documentation` load `writing` for shared prose rules, then add their own domain checks.
 
 ## Claude-only skills
 

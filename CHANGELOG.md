@@ -3,6 +3,12 @@
 All notable changes to the `jmchilton` plugin are documented here. Versions
 follow Semantic Versioning.
 
+## [1.3.0] - 2026-09-22
+
+### Added
+
+- Added small, shared writing, paper documentation, and software documentation skills.
+
 ## [1.2.1] - 2026-09-04
 
 ### Fixed
