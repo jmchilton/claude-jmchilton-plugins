@@ -24,7 +24,8 @@ Write for the stated reader and purpose. Infer either from the request and exist
 - Preserve the author's intended meaning and voice. Treat examples of another person's writing as references to analyze, not a voice to impersonate.
 - Check names, dates, numbers, quotations, and links against available sources. Give metrics a referent and time window. Mark unresolved facts instead of inventing them.
 - Replace importance claims, promotional adjectives, and decorative metaphors with the actual result or mechanism. Cut stock openings, repeated conclusions, and endings that merely say the work matters.
-- Vary sentence shape where it helps reading, without enforcing a rhythm formula. Use lists for genuine sets of actions or options, and prose for reasoning.
+- Vary sentence length according to the work each sentence does. State a finding plainly, then give the evidence, mechanism, or qualification it needs. Use a short sentence where a turn or conclusion deserves emphasis. Avoid a repeated pattern of punchy openings followed by long explanations, and make adjacent paragraphs carry the argument forward.
+- Use lists for genuine sets of actions or options, and prose for reasoning.
 - When revising, preserve important qualifications and distinguish established facts, interpretations, and plans. Call out any substantive change to a claim.
 
 Before delivery, read the result as the intended reader. Check that the opening answers the request, each paragraph advances it, claims are supported, and no placeholders or private source details slipped into the text.
