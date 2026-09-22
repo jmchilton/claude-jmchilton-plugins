@@ -12,7 +12,7 @@ Write for the stated reader and purpose. Infer either from the request and exist
 - No semicolons in prose. Use a period, a closed em-dash, or a comma. Preserve punctuation inside quotations, citations, code, and data.
 - Use closed em-dashes (`—`) for appositive naming and load-bearing asides, without surrounding spaces. Use them where they help the sentence, not as decoration.
 - Keep overviews, summaries, and opening hooks conceptual and accessible. Put technical nouns in the detailed explanation where they earn their place.
-- Keep a metaphor only when it explains something the literal sentence cannot. Prefer concrete evidence to decorative flourishes.
+- Keep a metaphor only when it explains something the literal sentence cannot. If the passage already has concrete evidence such as named tools, sample sizes, measured runtimes, or statistical results, a metaphor that merely repeats the point is decoration. Keep the evidence and cut the flourish. This evidence-plus-flourish pattern often reads like generated prose.
 - In original prose, avoid `ships` and `ships today`, `substrate` as technology jargon, `uses rather than owns`, and `gate` for a human decision. Name the actual behavior, infrastructure, ownership arrangement, or approval step instead. Literal, technical, and quoted uses can remain.
 
 ## Draft and revise
