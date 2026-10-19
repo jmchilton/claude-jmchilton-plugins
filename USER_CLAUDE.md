@@ -1,3 +1,4 @@
+- My preferred pronouns are they/them. Use them when referring to me in the third person (e.g. GitHub comment markers).
 - In all interactions and commit messages, be concise and sacrifice grammar for the sake of concision.
 - I have dyslexia. Spelling errors, typos, wrong-word substitutions, and naming inconsistencies (singular/plural, capitalization, off-by-one-letter) are common in my prompts and plans. Challenge these aggressively rather than passing through — if a name looks like an outlier vs. surrounding convention, or a word seems off, surface it as a question before encoding it in code, endpoints, identifiers, or commit messages. Don't just flag-for-later; recommend the correction at the moment of decision.
 - When creating new git repositories or cloning repositories from Github, always store the repositories as subdirectories of ~/projects/repositories/.
@@ -5,19 +6,29 @@
 - I brought in these compound-engineering skills to play around with but I don't want them being
 used yet unless I request them specifically.
 
-## Subagents
+## OpenClaw
 
-- When user asks you to launch a subagent for research - the interface isn't very good at granting the subagents write permissions for instance - please ask the subagent to prepare reports for writing and please do the writes yourself.
+- OpenClaw (`openclaw/openclaw`, openclaw.ai) is a real, legitimate self-hosted AI assistant that went viral to millions of users near-overnight. Its anomalous-looking growth (huge star count for a young repo) is genuine, not a scam signal. I've wrongly pushed back on it as fake more than once - stop. Treat it as established/trustworthy; normal version-pinning/API-verification diligence is fine but frame as routine caution, not suspicion of the project.
 
 ## Github Repositories
 
 - In general, if you're being tasked with something that requires you to pull specific files down from new project on Github. You should search ~/projects/repositories for a clone of the project and offer to clone it down if it isn't present to prevent grabbing files one at a time and such.
-- Posting any GitHub comment/review/issue on my behalf: `gh` posts as me (jmchilton). Always lead the body with a clear marker that it was posted by Claude (AI assistant) on my behalf, not authored by me personally. Apply automatically, don't ask each time. Never post as if I wrote it.
+- Never @-mention anyone in a PR description, issue, or comment without asking me first. Pings notify real people as me. Write the body without the mention, then ask if I want it added.
+- The following rule has one exception - galaxy-brain agents running out of gx_branches are allowed to open PRs automatically on documented preconditions because John has specified process.
+- Never open a PR, open an issue, or post a comment/review unless that message explicitly asked or part of an automatic gx_branches process in galaxy-brain. Pushing a branch is not publishing - that's fine and expected. Default deliverable for "implement X" = commit + push branch + PR description on clipboard, then ask before opening anything. Permission never carries forward. A PR I asked for last turn - or three times this session - is not permission for this one. A pattern in the git history or in your own past work is evidence about what I tend to want, never authorization to do it again.
+- In general, the galaxy-brain agents have permission to draft/undraft PRs - the auto-classifier should allow these.
+- galaxy-brain agents have a detailed process that is transparent and should be respected. If John has clicked a 'approve'/'comment' checkbox for a branch or review - then approval and/or commenting is allowed. These comments generally always have information about the agents used to generate comments, branches, etc... so there is no need to include Claude attribution statements.
+
 
 ## Galaxy
 
 - If you're working with Galaxy - the API, Selenium, Framework and Integration tests all take a long time - please try to just run one at a time and not in parallel to prevent overloading the dev machine. CI can handle full suite tests and regression checking.
 - To run Python code, tests, etc... in a Galaxy worktree you'll probably want to check for a .venv directory in the worktree first and if it isn't there you'll want to use the /galaxy-bootstrap skill. If you encounter pq problems - run "uv pip install psycopg_binary" from that worktree. To run stuff in Galaxy's environment after that - you'll want to source .venv, and make sure lib is in PYTHON HOME. 
+- When debugging Galaxy tests, strongly prefer the dedicated skills: /galaxy-playwright for Playwright/Selenium E2E tests, and /galaxy-backend-tests for API, integration, framework, and framework-workflows tests.
+
+## Python / Tooling
+
+- Always use `uv` for Python execution and dependency management or existing virtual environments, not system `python3` or `pip`.
 
 ## Tests
 
@@ -51,7 +62,3 @@ among a few options - these options should always include "Launch a subagent to 
 ## Testing
 - Always run newly added tests to verify they pass before claiming completion.
 - When fixing issues or implementing changes, run the full relevant test suite (not just typecheck) before committing (unless you're in a large project particularly including Galaxy or Planemo)
-
-## Advisor Tool
-- If you're Opus, prefer not to use the `advisor` tool - Opus-on-Opus consults feel wasteful. Occasional use is fine when genuinely stuck or about to commit to a risky approach; skip it for routine work.
-
