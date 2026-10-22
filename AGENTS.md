@@ -25,6 +25,8 @@ maintained source.
 - `README.md` must accurately list components, compatibility, installation,
   update, validation, and maintenance instructions.
 - `CHANGELOG.md` records every published version.
+- `plugins/suggested-prompts/` is a separate Claude Code-only hooks plugin
+  (TSX modules via `hooks/hooks.json`, not skills). See "Hooks plugins" below.
 
 Preserve unrelated working-tree changes. Stage only files belonging to the
 current task, and never hide user work with destructive Git commands.
@@ -46,6 +48,25 @@ current task, and never hide user work with destructive Git commands.
 6. Validate the skill and both plugin packaging surfaces.
 7. Replace intentional home-directory development copies with symlinks to the
    canonical checkout when that is more useful than a packaged install.
+
+## Hooks plugins
+
+- `plugins/suggested-prompts/` reads `SUGGESTED_PROMPTS.md` (cwd, then
+  `../_shared/`) and offers `/prompts` plus hint-line buttons. The prompt files
+  live in galaxy-brain agent dirs, e.g. `vault/agents/gx_branches/`.
+- Not in either marketplace yet. Loaded locally via `CLAUDE_CODE_PLUGIN_DIRS`
+  in `~/.claude/settings.json` (or `claude --plugin-dir`), so edits apply on
+  `/reload-plugins` with no version bump.
+- `scripts/validate_plugin_release.py` and CI cover only `plugins/jmchilton/`.
+  Check this plugin by hand:
+
+  ```sh
+  claude plugin test plugins/suggested-prompts
+  claude plugin validate plugins/suggested-prompts
+  ```
+
+- Before publishing it, add a marketplace entry, a README inventory row, and a
+  `CHANGELOG.md` entry; its own `plugin.json` version is then its cache key.
 
 ## Version and cache policy
 
