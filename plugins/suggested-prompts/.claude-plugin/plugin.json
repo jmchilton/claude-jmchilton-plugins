@@ -1,0 +1,1 @@
+{ "name": "suggested-prompts", "version": "0.1.0", "description": "Pick a prompt from SUGGESTED_PROMPTS.md in the working directory and send it or put it in the prompt box", "types": "./types/index.d.ts" }
