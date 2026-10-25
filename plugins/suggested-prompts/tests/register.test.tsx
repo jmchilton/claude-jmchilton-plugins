@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { appendPrompt, parsePrompts, quickEmoji } from '../hooks/register'
+import { appendPrompt, parsePrompts, parseProfiles, profileArgs, quickEmoji } from '../hooks/register'
 
 const MD = `# Suggested
 
@@ -46,6 +46,7 @@ async function openPicker($: any, on: any, done: { submitted: string[]; filled: 
   on('session.cwd', () => ({ value: '/work' }))
   on('fs.exists', () => ({ value: true }))
   on('fs.read', () => ({ value: MD }))
+  on('fs.list', () => ({ value: [] }))
   on('ui.open', () => ({ value: { isPlaced: true } }))
   on('ui.close', () => ({ value: undefined }))
   on('prompt.submit', (_: unknown, e: { text: string }) => {
@@ -87,6 +88,7 @@ test('the hint-line button opens the picker beside the engine hint', async ($, o
   on('command.register', () => ({ value: { command: 'prompts' } }))
   on('fs.exists', () => ({ value: true }))
   on('fs.read', () => ({ value: MD }))
+  on('fs.list', () => ({ value: [] }))
   on('ui.open', (_: unknown, e: { id: string }) => {
     opened.push(e.id)
     return { value: { isPlaced: true } }
@@ -128,6 +130,7 @@ test('Add last prompt appends the last typed prompt to the file', async ($, on) 
   on('session.cwd', () => ({ value: '/work' }))
   on('fs.exists', () => ({ value: true }))
   on('fs.read', () => ({ value: file }))
+  on('fs.list', () => ({ value: [] }))
   on('fs.write', (_: unknown, e: { text: string }) => {
     file = e.text
     return { value: undefined }
@@ -169,6 +172,7 @@ test('shared prompts merge after local ones and emoji ones get footer buttons th
   on('command.register', () => ({ value: { command: 'prompts' } }))
   on('fs.exists', () => ({ value: true }))
   on('fs.read', (_: unknown, e: { path: string }) => ({ value: fileFor(e.path) }))
+  on('fs.list', () => ({ value: [] }))
   on('prompt.submit', (_: unknown, e: { text: string }) => {
     submitted.push(e.text)
     return { text: e.text }
@@ -186,4 +190,142 @@ test('shared prompts merge after local ones and emoji ones get footer buttons th
   await ui.press({ key: 'quick:1' })
   expect(submitted).toEqual(['Run ../_shared/VAULT_SYNC.md'])
   await ui.unmount()
+})
+
+test('the toolbar ➕ comes first and its ⚡ launches a blank Claude', async ($, on) => {
+  const runs: (readonly string[])[] = []
+  const opened: string[] = []
+  on('ui.render', ($: any, e: any) => {
+    const { Text } = $.ui.resolve(e)
+    return <Text>? for shortcuts</Text>
+  })
+  on('command.register', () => ({ value: { command: 'prompts' } }))
+  on('fs.exists', (_: unknown, e: { path: string }) => ({ value: !e.path.endsWith('/docs/CLAUDE.md') }))
+  on('fs.read', () => ({ value: MD }))
+  on('fs.list', () => ({
+    value: [
+      { name: 'gx_reviews', kind: 'dir' },
+      { name: '_shared', kind: 'dir' },
+      { name: 'docs', kind: 'dir' },
+      { name: 'gx_branches', kind: 'dir' },
+      { name: 'README.md', kind: 'file' },
+    ],
+  }))
+  on('process.run', (_: unknown, e: { argv: readonly string[] }) => {
+    runs.push(e.argv)
+    return { value: { exitCode: 0, stdout: "Launched claude 'gx_reviews'\n", stderr: '' } }
+  })
+  on('ui.open', (_: unknown, e: { id: string }) => {
+    opened.push(e.id)
+    return { value: { isPlaced: true } }
+  })
+  on('ui.close', () => ({ value: undefined }))
+  on('ui.toast', () => ({ value: undefined }))
+  on('session.start', (_: unknown, e: { cwd: string }) => ({ cwd: e.cwd }))
+  await $.session.start({ cwd: '/agents/gx_branches', surface: 'terminal', isInteractive: true })
+  const hint = await $.ui.mount({
+    plugin: 'suggested-prompts',
+    component: 'PromptHint',
+    surface: 'terminal',
+    props: { isDraft: false, isWorking: false, hint: '? for shortcuts' },
+  } as any)
+  expect((await hint.findAll({ type: 'Button' })).map(b => b.text)).toEqual(['➕', '✖', '📋 2'])
+  await hint.press({ key: 'new' })
+  expect(opened).toEqual(['new-agent'])
+  const menu = await $.ui.mount({ ...PANE, requestId: 'new-agent', props: { ...PANE.props, title: 'New agent' } } as any)
+  expect((await menu.findAll({ type: 'Button' })).map(b => b.text)).toEqual(['⚡', '⚙️', '⚡', '⚙️'])
+  expect((await menu.find({ type: 'Text', text: /gx_reviews/ }))?.text).toBe(' gx_reviews')
+  await menu.press({ key: 'new:gx_reviews' })
+  expect(runs).toEqual([['sh', '../_shared/scripts/launch_agent.sh', 'gx_reviews', 'claude', 'gx_reviews', '']])
+  await menu.unmount()
+  await hint.unmount()
+})
+
+const PROFILES_YML = `# comment
+profiles:
+  - name: Opus (high)
+    agent: claude
+    effort: high
+    model: opus
+  # a note
+  - name: Codex (default)
+    agent: codex
+  - name: Sol (high)   # trailing
+    agent: codex
+    model: "gpt-6.1-sol"
+    effort: high
+    args: [--search, '-x']
+  - name: Broken
+    agent: gemini
+`
+
+test('parseProfiles reads the profiles list and skips unknown agents', async () => {
+  expect(parseProfiles(PROFILES_YML)).toEqual([
+    { name: 'Opus (high)', agent: 'claude', model: 'opus', effort: 'high', args: [] },
+    { name: 'Codex (default)', agent: 'codex', model: undefined, effort: undefined, args: [] },
+    { name: 'Sol (high)', agent: 'codex', model: 'gpt-6.1-sol', effort: 'high', args: ['--search', '-x'] },
+  ])
+  expect(profileArgs(parseProfiles(PROFILES_YML)[2]!)).toEqual(['-m', 'gpt-6.1-sol', '-c', 'model_reasoning_effort="high"', '--search', '-x'])
+})
+
+test('⚙️ opens the profile menu and launches with its agent, model and effort', async ($, on) => {
+  const runs: (readonly string[])[] = []
+  const opened: string[] = []
+  on('command.register', () => ({ value: { command: 'prompts' } }))
+  on('fs.exists', () => ({ value: true }))
+  on('fs.read', (_: unknown, e: { path: string }) => ({ value: e.path.endsWith('AGENT_PROFILES.yml') ? PROFILES_YML : MD }))
+  on('fs.list', () => ({ value: [{ name: 'gx_reviews', kind: 'dir' }] }))
+  on('process.run', (_: unknown, e: { argv: readonly string[] }) => {
+    runs.push(e.argv)
+    return { value: { exitCode: 0, stdout: 'Launched\n', stderr: '' } }
+  })
+  on('ui.open', (_: unknown, e: { id: string }) => {
+    opened.push(e.id)
+    return { value: { isPlaced: true } }
+  })
+  const closed: string[] = []
+  on('ui.close', (_: unknown, e: { id: string }) => {
+    closed.push(e.id)
+    return { value: undefined }
+  })
+  on('ui.toast', () => ({ value: undefined }))
+  on('session.start', (_: unknown, e: { cwd: string }) => ({ cwd: e.cwd }))
+  await $.session.start({ cwd: '/agents/gx_branches', surface: 'terminal', isInteractive: true })
+  const menu = await $.ui.mount({ ...PANE, requestId: 'new-agent' } as any)
+  await menu.press({ key: 'gear:gx_reviews' })
+  expect(opened).toEqual(['new-agent-profile'])
+  expect(closed).toEqual(['new-agent'])
+  const pick = await $.ui.mount({ ...PANE, requestId: 'new-agent-profile' } as any)
+  expect((await pick.findAll({ type: 'Button' })).map(b => b.text)).toEqual(['Opus (high)', 'Codex (default)', 'Sol (high)'])
+  await pick.press({ key: 'profile:0' })
+  expect(runs).toEqual([['sh', '../_shared/scripts/launch_agent.sh', 'gx_reviews', 'claude', 'gx_reviews', '', '--model', 'opus', '--effort', 'high']])
+  await pick.unmount()
+  await menu.unmount()
+})
+
+test('the toolbar ✖ closes this herdr pane', async ($, on) => {
+  const runs: (readonly string[])[] = []
+  on('ui.render', ($: any, e: any) => {
+    const { Text } = $.ui.resolve(e)
+    return <Text>? for shortcuts</Text>
+  })
+  on('command.register', () => ({ value: { command: 'prompts' } }))
+  on('fs.exists', () => ({ value: true }))
+  on('fs.read', () => ({ value: MD }))
+  on('fs.list', () => ({ value: [{ name: 'gx_reviews', kind: 'dir' }] }))
+  on('process.run', (_: unknown, e: { argv: readonly string[] }) => {
+    runs.push(e.argv)
+    return { value: { exitCode: 0, stdout: '', stderr: '' } }
+  })
+  on('session.start', (_: unknown, e: { cwd: string }) => ({ cwd: e.cwd }))
+  await $.session.start({ cwd: '/agents/gx_branches', surface: 'terminal', isInteractive: true })
+  const hint = await $.ui.mount({
+    plugin: 'suggested-prompts',
+    component: 'PromptHint',
+    surface: 'terminal',
+    props: { isDraft: false, isWorking: false, hint: '? for shortcuts' },
+  } as any)
+  await hint.press({ key: 'close' })
+  expect(runs).toEqual([['sh', '-c', 'herdr pane close "$HERDR_PANE_ID"']])
+  await hint.unmount()
 })
