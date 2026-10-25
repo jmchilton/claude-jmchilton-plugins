@@ -5,6 +5,11 @@ follow Semantic Versioning.
 
 ## [1.3.0] - 2026-10-25
 
+### Added
+
+- `rebase-evaluate-fixup` command: judge whether commits should be squashed
+  together and write the squashed commit message.
+
 ### Changed
 
 - `galaxy-playwright` runs through a new `galaxy_e2e.sh`: each worktree gets
