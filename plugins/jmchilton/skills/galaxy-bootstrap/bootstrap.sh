@@ -51,6 +51,13 @@ uv pip install -r requirements.txt \
     -r lib/galaxy/dependencies/dev-requirements.txt \
     --extra-index-url https://wheels.galaxyproject.org/simple
 
+# CI's pinned ruff and mypy (plus stubs), when the branch has them
+for req in pinned-lint-requirements.txt pinned-typecheck-requirements.txt; do
+    if [ -f "lib/galaxy/dependencies/$req" ]; then
+        uv pip install -r "lib/galaxy/dependencies/$req"
+    fi
+done
+
 # 4. Install Playwright browsers
 echo "Installing Playwright browsers..."
 playwright install
