@@ -3,6 +3,14 @@
 All notable changes to the `jmchilton` plugin are documented here. Versions
 follow Semantic Versioning.
 
+## [1.2.2] - 2026-10-24
+
+### Changed
+
+- `galaxy-bootstrap` installs CI's pinned ruff and mypy (plus stubs) from
+  `pinned-lint-requirements.txt` and `pinned-typecheck-requirements.txt` when
+  the branch has them.
+
 ## [1.2.1] - 2026-09-04
 
 ### Fixed
