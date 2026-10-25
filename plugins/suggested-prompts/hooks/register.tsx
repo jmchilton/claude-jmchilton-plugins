@@ -1,15 +1,23 @@
 import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
-import type { SuggestedPrompt } from '../types'
+import type { AgentProfile, SuggestedPrompt } from '../types'
 
 const PANE = 'suggested-prompts'
+const NEW_PANE = 'new-agent'
+const PROFILE_PANE = 'new-agent-profile'
 const FILE = 'SUGGESTED_PROMPTS.md'
 const SHARED = '../_shared/SUGGESTED_PROMPTS.md'
 const LABEL_MAX = 100
+// galaxy-brain layout: agent dirs are siblings of the session's cwd.
+const LAUNCH = '../_shared/scripts/launch_agent.sh'
+const PROFILES = '../_shared/AGENT_PROFILES.yml'
 
 const prompts = atom({ plugin: 'suggested-prompts', key: 'prompts' } as const, [])
 const lastPrompt = atom({ plugin: 'suggested-prompts', key: 'lastPrompt' } as const, null)
+const agentDirs = atom({ plugin: 'suggested-prompts', key: 'agentDirs' } as const, [])
+const profileDir = atom({ plugin: 'suggested-prompts', key: 'profileDir' } as const, null)
+const profiles = atom({ plugin: 'suggested-prompts', key: 'profiles' } as const, [])
 
 // `## Label` sections (body is the prompt, the label when empty), else top-level bullets.
 export function parsePrompts(markdown: string): SuggestedPrompt[] {
@@ -93,6 +101,83 @@ async function load($: EngineInterface): Promise<SuggestedPrompt[]> {
   return found
 }
 
+// Sibling agent dirs (with a CLAUDE.md, not `_`-prefixed) when the launch script is there.
+async function loadAgentDirs($: EngineInterface): Promise<string[]> {
+  const dirs: string[] = []
+  if (await $.fs.exists(LAUNCH)) {
+    for (const entry of await $.fs.list('..')) {
+      if (entry.kind === 'dir' && !entry.name.startsWith('_') && (await $.fs.exists(`../${entry.name}/CLAUDE.md`))) {
+        dirs.push(entry.name)
+      }
+    }
+  }
+  dirs.sort()
+  await update($, agentDirs, () => dirs)
+  return dirs
+}
+
+// AGENT_PROFILES.yml's `profiles:` list: scalar fields plus an inline `args: [...]`.
+export function parseProfiles(yaml: string): AgentProfile[] {
+  const found: AgentProfile[] = []
+  let entry: Record<string, string> | null = null
+  const flush = () => {
+    const agent = entry?.agent
+    if (entry?.name && (agent === 'claude' || agent === 'codex')) {
+      const args = (entry.args ?? '').replace(/^\[|\]$/g, '').split(',').map(unquote).filter(Boolean)
+      found.push({ name: entry.name, agent, model: entry.model, effort: entry.effort, args })
+    }
+  }
+  for (const line of yaml.split(/\r?\n/)) {
+    const field = /^\s*(-\s+)?(\w+):\s*(.*?)\s*$/.exec(line.replace(/\s+#.*$/, ''))
+    if (!field || line.trimStart().startsWith('#')) {
+      continue
+    }
+    if (field[1]) {
+      flush()
+      entry = {}
+    }
+    if (entry) {
+      entry[field[2]!] = unquote(field[3]!)
+    }
+  }
+  flush()
+  return found
+}
+
+function unquote(text: string): string {
+  return text.trim().replace(/^(["'])(.*)\1$/, '$2')
+}
+
+// Same flags as the Obsidian launch dialog.
+export function profileArgs(profile: AgentProfile): string[] {
+  const args: string[] = []
+  if (profile.agent === 'claude') {
+    if (profile.model) args.push('--model', profile.model)
+    if (profile.effort) args.push('--effort', profile.effort)
+  } else {
+    if (profile.model) args.push('-m', profile.model)
+    if (profile.effort) args.push('-c', `model_reasoning_effort="${profile.effort}"`)
+  }
+  return [...args, ...profile.args]
+}
+
+// Closes this session's herdr pane (and its workspace when it was the last pane), ending Claude.
+async function closeAgentPane($: EngineInterface): Promise<void> {
+  const { exitCode, stdout, stderr } = await $.process.run(['sh', '-c', 'herdr pane close "$HERDR_PANE_ID"'])
+  if (exitCode !== 0) {
+    $.ui.toast(`Close failed: ${stderr.trim() || stdout.trim()}`)
+  }
+}
+
+async function launchAgent($: EngineInterface, dir: string, profile?: AgentProfile): Promise<void> {
+  await $.ui.close({ id: NEW_PANE })
+  await $.ui.close({ id: PROFILE_PANE })
+  const kind = profile?.agent ?? 'claude'
+  const args = profile ? profileArgs(profile) : []
+  const { exitCode, stdout, stderr } = await $.process.run(['sh', LAUNCH, dir, kind, dir, '', ...args], { timeoutMs: 90_000 })
+  $.ui.toast(exitCode === 0 ? stdout.trim() : `New ${dir} agent failed: ${stderr.trim() || stdout.trim()}`)
+}
+
 async function openPicker($: EngineInterface, count: number): Promise<void> {
   await $.ui.open({
     id: PANE,
@@ -112,6 +197,7 @@ export const register: Register = on => {
     })
     const started = await next(e)
     await load($)
+    await loadAgentDirs($)
     return started
   })
 
@@ -136,13 +222,29 @@ export const register: Register = on => {
   on('ui.render', { component: 'PromptHint' }, async ($, e, next) => {
     const engine = await next(e)
     const list = await read($, prompts)
-    if (list.length === 0) {
+    const dirs = await read($, agentDirs)
+    if (list.length === 0 && dirs.length === 0) {
       return engine
     }
     const { Box, Button, Text } = $.ui.resolve(e)
     return (
       <Box>
         {engine}
+        {dirs.length > 0 && [
+          <Text> </Text>,
+          <Button
+            key="new"
+            label="➕"
+            onPress={async () => {
+              const found = await loadAgentDirs($)
+              if (found.length > 0) {
+                await $.ui.open({ id: NEW_PANE, title: 'New agent', focus: true, closeOnEscape: true, holdToasts: true, rows: found.length + 3 })
+              }
+            }}
+          />,
+          <Text> </Text>,
+          <Button key="close" label="✖" onPress={() => closeAgentPane($)} />,
+        ]}
         {list.flatMap((one, i) => {
           const emoji = quickEmoji(one.label)
           return emoji === undefined ? [] : [
@@ -154,8 +256,8 @@ export const register: Register = on => {
             />,
           ]
         })}
-        <Text> </Text>
-        <Button
+        {list.length > 0 && <Text> </Text>}
+        {list.length > 0 && <Button
           key="open"
           label={`📋 ${list.length}`}
           onPress={async () => {
@@ -164,7 +266,53 @@ export const register: Register = on => {
               await openPicker($, found.length)
             }
           }}
-        />
+        />}
+      </Box>
+    )
+  })
+
+  on('ui.render', { component: 'Pane', requestId: NEW_PANE }, async ($, e) => {
+    const { Box, Button, Text } = $.ui.resolve(e)
+    const dirs = await read($, agentDirs)
+    return (
+      <Box flexDirection="column">
+        {dirs.map((dir, i) => (
+          <Box key={`row:${dir}`}>
+            <Button key={`new:${dir}`} label="⚡" autoFocus={i === 0 ? true : undefined} onPress={() => launchAgent($, dir)} />
+            <Text> </Text>
+            <Button
+              key={`gear:${dir}`}
+              label="⚙️"
+              onPress={async () => {
+                const list = (await $.fs.exists(PROFILES)) ? parseProfiles(await $.fs.read(PROFILES)) : []
+                await update($, profiles, () => list)
+                await update($, profileDir, () => dir)
+                await $.ui.close({ id: NEW_PANE })
+                await $.ui.open({ id: PROFILE_PANE, title: `New ${dir} agent`, focus: true, closeOnEscape: true, holdToasts: true, rows: list.length + 3 })
+              }}
+            />
+            <Text> {dir}</Text>
+          </Box>
+        ))}
+        <Text dimColor>⚡ blank Claude, ⚙️ pick model + effort; new herdr workspace. Esc closes</Text>
+      </Box>
+    )
+  })
+
+  on('ui.render', { component: 'Pane', requestId: PROFILE_PANE }, async ($, e) => {
+    const { Box, Button, Text } = $.ui.resolve(e)
+    const dir = await read($, profileDir)
+    const list = await read($, profiles)
+    return (
+      <Box flexDirection="column">
+        {dir !== null && list.map((profile, i) => (
+          <Box key={`row:${i}`}>
+            <Button key={`profile:${i}`} label={profile.name} autoFocus={i === 0 ? true : undefined} onPress={() => launchAgent($, dir, profile)} />
+            <Text dimColor> {profile.agent} {profileArgs(profile).join(' ')}</Text>
+          </Box>
+        ))}
+        {list.length === 0 && <Text>No profiles in {PROFILES}.</Text>}
+        <Text dimColor>Esc closes</Text>
       </Box>
     )
   })
