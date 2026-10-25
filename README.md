@@ -96,7 +96,7 @@ Code.
 
 - **Galaxy CI:** `check-gx-branch`
 - **Git history and delivery:** `commit`, `gita`, `deconflict`,
-  `decompose-for-rebase`, `pull-request-summary`
+  `decompose-for-rebase`, `pull-request-summary`, `rebase-evaluate-fixup`
 - **Review:** `comment-archaeology`, `dedup`, `gx-vitest-review`,
   `py-challenge-patches`, `pyreview`, `review-test`
 - **Plans:** `plan-clean`, `plan-debrief`, `plan-integrate-questions`,
